@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result && $result->num_rows === 1) {
         $row = $result->fetch_assoc();
-        if (password_verify($entered_password, $row['acc_password'])) {
+        if ($entered_password === $row['acc_password']) {
             $_SESSION['hospital_serial'] = $row['Hospital_Serial'];
             $_SESSION['hospital_name'] = $row['Hospital_Name'];
             $_SESSION['hospital_address'] = $row['Address'];

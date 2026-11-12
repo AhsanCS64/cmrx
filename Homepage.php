@@ -140,17 +140,22 @@ $conn->close();
     .feature-card h3 { font-size: 1.3rem; color: var(--ink); margin-bottom: 0.6rem; }
     .feature-card p { margin: 0; color: var(--muted); font-size: 0.97rem; }
 
-    .about-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 2.2rem; align-items: center; }
-    .about-panel { background: var(--card); border: 1px solid var(--line); border-radius: 26px; box-shadow: var(--soft-shadow); overflow: hidden; }
-    .about-panel img { width: 100%; height: 100%; min-height: 420px; object-fit: cover; }
-    .about-copy {
-      background: rgba(255,255,255,0.7); border: 1px solid rgba(148,163,184,0.12); border-radius: 26px; padding: 2rem; box-shadow: 0 16px 28px rgba(15,23,42,0.04);
-    }
-    .about-copy h3 { font-size: clamp(1.8rem, 2vw, 2.4rem); letter-spacing: -0.04em; color: var(--ink); margin-bottom: 1rem; }
-    .about-copy p { color: var(--muted); margin: 0 0 1.5rem; font-size: 1rem; }
-    .check-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.8rem; }
-    .check-list li { display: flex; align-items: center; gap: 0.7rem; color: var(--ink); font-weight: 600; }
-    .check-list li::before { content: '\f00c'; font-family: 'Font Awesome 6 Free'; font-weight: 900; color: var(--secondary); background: rgba(20,184,166,0.12); width: 28px; height: 28px; display: inline-grid; place-items: center; border-radius: 50%; }
+    .team-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; align-items: stretch; }
+    .team-card { overflow: hidden; background: rgba(255,255,255,0.86); border: 1px solid rgba(148,163,184,0.2); border-radius: 22px; box-shadow: 0 16px 30px rgba(15,23,42,0.05); transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .team-card:hover { transform: translateY(-5px); box-shadow: 0 24px 40px rgba(37,99,235,0.11); }
+    .team-photo { position: relative; overflow: hidden; background: linear-gradient(135deg, #dbeafe, #dff8f7); }
+    .team-photo img { width: 100%; height: 230px; object-fit: cover; object-position: center 28%; }
+    .team-card:nth-child(1) .team-photo img { object-position: center 38%; }
+    .team-card:nth-child(2) .team-photo img { object-position: center 24%; }
+    .team-card:nth-child(3) .team-photo img { object-position: center 25%; }
+    .team-card:nth-child(4) .team-photo img { object-position: center 25%; }
+    .team-content { padding: 1.25rem; }
+    .team-role { display: inline-flex; margin-bottom: 0.75rem; padding: 0.35rem 0.65rem; color: var(--primary-strong); border-radius: 999px; background: rgba(37,99,235,0.08); font-size: 0.72rem; font-weight: 700; line-height: 1.35; }
+    .team-content h3 { color: var(--ink); font-size: 1.16rem; letter-spacing: -0.025em; margin-bottom: 0.65rem; }
+    .team-bio { min-height: 5.2rem; margin: 0; color: var(--muted); font-size: 0.88rem; }
+    .team-contribution { margin-top: 1rem; padding-top: 0.9rem; border-top: 1px solid rgba(148,163,184,0.2); color: var(--muted); font-size: 0.84rem; }
+    .team-contribution strong { display: block; margin-bottom: 0.3rem; color: var(--ink); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .team-link { display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 0.8rem; color: var(--primary-strong); font-size: 0.82rem; font-weight: 700; }
 
     .modules-wrap { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
     .module-card { background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%); border: 1px solid rgba(148,163,184,0.18); border-radius: 22px; overflow: hidden; box-shadow: 0 16px 30px rgba(15,23,42,0.04); }
@@ -159,16 +164,30 @@ $conn->close();
     .module-card h3 { font-size: 1.25rem; color: var(--ink); margin-bottom: 0.5rem; }
     .module-card p { margin: 0; color: var(--muted); font-size: 0.96rem; }
 
-    .hospital-box { background: rgba(255,255,255,0.75); border: 1px solid rgba(148,163,184,0.2); border-radius: 28px; box-shadow: var(--shadow); overflow: hidden; }
-    .hospital-header { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); padding: 1.4rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid rgba(148,163,184,0.26); }
+    .hospital-box { position: relative; z-index: 1; background: rgba(255,255,255,0.75); border: 1px solid rgba(148,163,184,0.2); border-radius: 28px; box-shadow: var(--shadow); }
+    .hospital-box.dropdown-open { z-index: 10; }
+    .hospital-header { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); padding: 1.4rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-radius: 28px; }
     .hospital-header h3 { font-size: clamp(1.5rem, 2vw, 2rem); color: var(--ink); display: flex; align-items: center; gap: 0.7rem; }
     .hospital-header h3 i { color: var(--primary); }
-    .toggle-btn { border: 0; background: var(--primary); color: white; font-weight: 700; border-radius: 999px; padding: 0.75rem 1.1rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 10px 20px rgba(37,99,235,0.18); }
-    .hospital-list { list-style: none; padding: 1.5rem; margin: 0; display: grid; gap: 1rem; }
-    .hospital-item { display: block; background: linear-gradient(135deg, #f8fbff 0%, #eef6ff 100%); border: 1px solid rgba(96,165,250,0.4); border-radius: 18px; padding: 1.15rem 1.2rem; box-shadow: 0 8px 22px rgba(37,99,235,0.08); }
-    .hospital-item h4 { color: var(--ink); margin-bottom: 0.35rem; font-size: 1.12rem; }
-    .hospital-item p { margin: 0; color: var(--muted); display: flex; align-items: center; gap: 0.6rem; }
+    .hospital-heading p { margin: 0.45rem 0 0; color: var(--muted); font-size: 0.9rem; }
+    .toggle-btn { border: 0; background: var(--primary); color: white; font-weight: 700; border-radius: 999px; padding: 0.75rem 1.1rem; cursor: pointer; display: inline-flex; align-items: center; gap: 0.65rem; box-shadow: 0 10px 20px rgba(37,99,235,0.18); white-space: nowrap; }
+    .toggle-btn:focus-visible, .hospital-search:focus-visible { outline: 3px solid rgba(37,99,235,0.3); outline-offset: 3px; }
+    .toggle-btn .fa-chevron-down { transition: transform 0.2s ease; }
+    .toggle-btn[aria-expanded="true"] .fa-chevron-down { transform: rotate(180deg); }
+    .hospital-dropdown { position: absolute; z-index: 20; top: calc(100% + 0.75rem); right: 0; display: flex; flex-direction: column; width: min(560px, calc(100vw - 2rem)); max-height: min(460px, calc(100vh - 2rem)); overflow: hidden; border: 1px solid rgba(148,163,184,0.28); border-radius: 18px; background: var(--card); box-shadow: 0 24px 60px rgba(15,23,42,0.2); }
+    .hospital-dropdown[hidden] { display: none; }
+    .hospital-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 0.8rem; padding: 1rem; border-bottom: 1px solid var(--line); background: #fff; }
+    .hospital-search { width: 100%; min-width: 0; padding: 0.7rem 0.85rem; border: 1px solid rgba(148,163,184,0.35); border-radius: 10px; color: var(--ink); background: #f8fbff; font: inherit; }
+    .hospital-result-count { flex: 0 0 auto; color: var(--muted); font-size: 0.78rem; white-space: nowrap; }
+    .hospital-list { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; list-style: none; padding: 0.65rem; margin: 0; display: grid; gap: 0.45rem; }
+    .hospital-list[hidden] { display: none; }
+    .hospital-item { display: block; padding: 0.8rem 0.9rem; border: 1px solid rgba(148,163,184,0.16); border-radius: 12px; background: linear-gradient(135deg, #fbfdff 0%, #f2f7ff 100%); }
+    .hospital-item[hidden], .hospital-empty[hidden] { display: none; }
+    .hospital-empty { padding: 1.5rem 1rem; color: var(--muted); text-align: center; font-size: 0.9rem; }
+    .hospital-item h4 { color: var(--ink); margin-bottom: 0.25rem; font-size: 1rem; }
+    .hospital-item p { margin: 0; color: var(--muted); display: flex; align-items: center; gap: 0.6rem; font-size: 0.88rem; }
     .hospital-item i { color: var(--primary); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
     .cta { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-strong) 100%); color: white; padding: 4rem 0; text-align: center; }
     .cta h2 { font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -0.05em; margin-bottom: 0.8rem; }
@@ -192,7 +211,8 @@ $conn->close();
     .footer-bottom { border-top: 1px solid rgba(148,163,184,0.18); padding-top: 1.2rem; text-align: center; color: rgba(255,255,255,0.66); font-size: 0.9rem; }
 
     @media (max-width: 980px) {
-      .hero-grid, .about-wrap, .feature-grid, .modules-wrap, .footer-grid { grid-template-columns: 1fr; }
+      .hero-grid, .feature-grid, .modules-wrap, .footer-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .hero-stats { grid-template-columns: 1fr; }
       .nav-links { display: none; }
       .menu-toggle { display: block; }
@@ -202,8 +222,13 @@ $conn->close();
       .hero-actions, .cta-actions { flex-direction: column; }
       .btn { width: 100%; }
       .nav-actions .btn { display: none; }
+      .team-grid { grid-template-columns: 1fr; }
+      .team-bio { min-height: 0; }
       .hospital-header { flex-direction: column; align-items: flex-start; }
       .hospital-header .toggle-btn { width: 100%; justify-content: center; }
+      .hospital-dropdown { left: 0; right: auto; width: 100%; }
+      .hospital-toolbar { align-items: stretch; flex-direction: column; }
+      .hospital-result-count { align-self: flex-end; }
     }
   </style>
 </head>
@@ -216,6 +241,7 @@ $conn->close();
         <li><a href="login_doc.php">Doctor Profile</a></li>
         <li><a href="login.php">Patient Profile</a></li>
         <li><a href="#departments">Departments</a></li>
+        <li><a href="#team">Our Team</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
       <div class="nav-actions">
@@ -291,20 +317,84 @@ $conn->close();
     </div>
   </section>
 
-  <section class="section">
-    <div class="container about-wrap">
-      <div class="about-panel">
-        <img src="https://images.unsplash.com/photo-1538108149393-fbbd81895977?auto=format&fit=crop&w=1200&q=80" alt="Doctors collaborating" />
+  <section class="section" id="team">
+    <div class="container">
+      <div class="section-head">
+        <h2>Meet the CMRx team</h2>
+        <p>The people behind the system, bringing together healthcare workflows, thoughtful design, and dependable software.</p>
       </div>
-      <div class="about-copy">
-        <h3>Connected care, smarter decisions.</h3>
-        <p>CMRx helps unify fragmented healthcare information so hospitals, clinics, and doctors can act faster with better visibility across every stage of a patient’s care journey.</p>
-        <ul class="check-list">
-          <li>Unified patient profiles</li>
-          <li>Prescription and disease tracking</li>
-          <li>Hospital and doctor coordination</li>
-          <li>Improved continuity of care</li>
-        </ul>
+      <div class="team-grid">
+        <article class="team-card">
+          <div class="team-photo">
+            <img src="Photos/kushal.jpg" alt="H. M. Ahsan Habib Kushal" loading="lazy" />
+          </div>
+          <div class="team-content">
+            <span class="team-role">CSE student · Aspiring AI/ML engineer &amp; researcher</span>
+            <h3>H. M. Ahsan Habib Kushal</h3>
+            <p class="team-bio">Interested in machine learning, deep learning, computer vision, data science, and software development.</p>
+            <div class="team-contribution">
+              <strong>Project contribution</strong>
+              Led the database design and implementation and shaped the system architecture.
+            </div>
+            <a class="team-link" href="https://www.linkedin.com/in/h-m-ahsan-habib-kushal-0263731a1/" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-linkedin-in" aria-hidden="true"></i> LinkedIn profile
+            </a>
+          </div>
+        </article>
+
+        <article class="team-card">
+          <div class="team-photo">
+            <img src="Photos/heme.jpg" alt="Homayra Binte Harun Heme" loading="lazy" />
+          </div>
+          <div class="team-content">
+            <span class="team-role">CSE student at NITER · MERN Stack Developer</span>
+            <h3>Homayra Binte Harun Heme</h3>
+            <p class="team-bio">Works with React, Node.js, Express, MongoDB, and Next.js to build modern web applications.</p>
+            <div class="team-contribution">
+              <strong>Project contribution</strong>
+              Helped develop the database architecture and shape the front-end design.
+            </div>
+            <a class="team-link" href="https://www.linkedin.com/in/homayra-heme/" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-linkedin-in" aria-hidden="true"></i> LinkedIn profile
+            </a>
+          </div>
+        </article>
+
+        <article class="team-card">
+          <div class="team-photo">
+            <img src="Photos/adnan.jpg" alt="Adnan Hassan" loading="lazy" />
+          </div>
+          <div class="team-content">
+            <span class="team-role">Software Developer Intern · Efficient ERP Limited</span>
+            <h3>Adnan Hassan</h3>
+            <p class="team-bio">Focused on software development, with professional experience as an intern at Efficient ERP Limited.</p>
+            <div class="team-contribution">
+              <strong>Project contribution</strong>
+              Developed the backend and integrated the project’s features.
+            </div>
+            <a class="team-link" href="https://www.linkedin.com/in/adnan-hasanncs/" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-linkedin-in" aria-hidden="true"></i> LinkedIn profile
+            </a>
+          </div>
+        </article>
+
+        <article class="team-card">
+          <div class="team-photo">
+            <img src="Photos/suraya.jpg" alt="Suraya Akter Bonna" loading="lazy" />
+          </div>
+          <div class="team-content">
+            <span class="team-role">Software requirements · Database design</span>
+            <h3>Suraya Akter Bonna</h3>
+            <p class="team-bio">Contributed to the planning and documentation that helped define the project’s requirements.</p>
+            <div class="team-contribution">
+              <strong>Project contribution</strong>
+              Contributed to partial database design and prepared the Software Requirements Specification (SRS).
+            </div>
+            <a class="team-link" href="https://www.linkedin.com/in/suraya-akter-bonna-145865257/" target="_blank" rel="noopener noreferrer">
+              <i class="fab fa-linkedin-in" aria-hidden="true"></i> LinkedIn profile
+            </a>
+          </div>
+        </article>
       </div>
     </div>
   </section>
@@ -345,30 +435,38 @@ $conn->close();
     <div class="container">
       <div class="hospital-box">
         <div class="hospital-header">
-          <h3><i class="fas fa-hospital"></i> Registered Hospitals</h3>
-          <button class="toggle-btn" type="button" id="toggleHospitalsBtn" aria-expanded="true">
-            <span class="toggle-label">Hide List</span>
-            <i class="fas fa-chevron-up"></i>
+          <div class="hospital-heading">
+            <h3><i class="fas fa-hospital"></i> Registered Hospitals</h3>
+            <p><strong><?php echo (int)$hospital_count; ?></strong> facilities in the CMRx directory</p>
+          </div>
+          <button class="toggle-btn" type="button" id="toggleHospitalsBtn" aria-expanded="false" aria-controls="hospitalDropdown" aria-label="Browse registered hospitals">
+            <span class="toggle-label">Browse hospitals</span>
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
           </button>
         </div>
 
-        <?php if ($hospital_result && $hospital_result->num_rows > 0): ?>
-          <ul class="hospital-list" id="hospitalList">
-            <?php while ($hospital = $hospital_result->fetch_assoc()): ?>
-              <li class="hospital-item">
-                <h4><?php echo htmlspecialchars($hospital['Hospital_Name']); ?></h4>
-                <?php if (!empty($hospital['Address'])): ?>
-                  <p><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($hospital['Address']); ?></p>
-                <?php endif; ?>
-              </li>
-            <?php endwhile; ?>
-          </ul>
-        <?php else: ?>
-          <div style="padding:2rem; text-align:center; color:var(--muted);">
-            <i class="fas fa-hospital" style="font-size:2rem; color:#93c5fd; display:block; margin-bottom:0.75rem;"></i>
-            No hospitals registered yet.
-          </div>
-        <?php endif; ?>
+        <div class="hospital-dropdown" id="hospitalDropdown" hidden>
+          <?php if ($hospital_result && $hospital_result->num_rows > 0): ?>
+            <div class="hospital-toolbar">
+              <label class="sr-only" for="hospitalSearch">Search hospitals</label>
+              <input class="hospital-search" type="search" id="hospitalSearch" placeholder="Search by hospital or address" autocomplete="off">
+              <span class="hospital-result-count" id="hospitalResultCount" aria-live="polite"><?php echo (int)$hospital_count; ?> hospitals</span>
+            </div>
+            <ul class="hospital-list" id="hospitalList" tabindex="0" aria-label="Registered hospitals">
+              <?php while ($hospital = $hospital_result->fetch_assoc()): ?>
+                <li class="hospital-item">
+                  <h4><?php echo htmlspecialchars($hospital['Hospital_Name'], ENT_QUOTES, 'UTF-8'); ?></h4>
+                  <?php if (!empty($hospital['Address'])): ?>
+                    <p><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <?php echo htmlspecialchars($hospital['Address'], ENT_QUOTES, 'UTF-8'); ?></p>
+                  <?php endif; ?>
+                </li>
+              <?php endwhile; ?>
+              <li class="hospital-empty" id="hospitalNoResults" hidden>No hospitals match your search.</li>
+            </ul>
+          <?php else: ?>
+            <div class="hospital-empty">No hospitals registered yet.</div>
+          <?php endif; ?>
+        </div>
       </div>
     </div>
   </section>
@@ -449,16 +547,59 @@ $conn->close();
     }
 
     const toggleHospitalsBtn = document.getElementById('toggleHospitalsBtn');
+    const hospitalBox = document.querySelector('.hospital-box');
+    const hospitalDropdown = document.getElementById('hospitalDropdown');
     const hospitalList = document.getElementById('hospitalList');
+    const hospitalSearch = document.getElementById('hospitalSearch');
+    const hospitalItems = hospitalList ? Array.from(hospitalList.querySelectorAll('.hospital-item')) : [];
+    const hospitalNoResults = document.getElementById('hospitalNoResults');
+    const hospitalResultCount = document.getElementById('hospitalResultCount');
     const toggleLabel = document.querySelector('.toggle-label');
-    if (toggleHospitalsBtn && hospitalList && toggleLabel) {
+    function setHospitalDropdownOpen(isOpen) {
+      if (!toggleHospitalsBtn || !hospitalDropdown || !toggleLabel) return;
+      hospitalDropdown.hidden = !isOpen;
+      toggleHospitalsBtn.setAttribute('aria-expanded', String(isOpen));
+      toggleHospitalsBtn.setAttribute('aria-label', isOpen ? 'Close hospital directory' : 'Browse registered hospitals');
+      toggleLabel.textContent = isOpen ? 'Close directory' : 'Browse hospitals';
+      hospitalBox.classList.toggle('dropdown-open', isOpen);
+      if (isOpen && hospitalSearch) hospitalSearch.focus();
+    }
+
+    if (toggleHospitalsBtn && hospitalDropdown && toggleLabel) {
       toggleHospitalsBtn.addEventListener('click', () => {
-        const isHidden = hospitalList.style.display === 'none';
-        hospitalList.style.display = isHidden ? 'grid' : 'none';
-        toggleLabel.textContent = isHidden ? 'Hide List' : 'Show List';
-        toggleHospitalsBtn.setAttribute('aria-expanded', String(isHidden));
+        setHospitalDropdownOpen(toggleHospitalsBtn.getAttribute('aria-expanded') !== 'true');
       });
     }
+
+    if (hospitalSearch && hospitalItems.length && hospitalResultCount) {
+      const filterHospitals = () => {
+        const query = hospitalSearch.value.trim().toLocaleLowerCase();
+        let visibleCount = 0;
+        hospitalItems.forEach((item) => {
+          const matches = item.textContent.toLocaleLowerCase().includes(query);
+          item.hidden = !matches;
+          if (matches) visibleCount++;
+        });
+        hospitalResultCount.textContent = `${visibleCount} of ${hospitalItems.length} hospitals`;
+        if (hospitalNoResults) hospitalNoResults.hidden = visibleCount > 0;
+      };
+      hospitalSearch.addEventListener('input', filterHospitals);
+      filterHospitals();
+    }
+
+    document.addEventListener('click', (event) => {
+      if (toggleHospitalsBtn && toggleHospitalsBtn.getAttribute('aria-expanded') === 'true' &&
+          hospitalBox && !hospitalBox.contains(event.target)) {
+        setHospitalDropdownOpen(false);
+      }
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggleHospitalsBtn &&
+          toggleHospitalsBtn.getAttribute('aria-expanded') === 'true') {
+        setHospitalDropdownOpen(false);
+        toggleHospitalsBtn.focus();
+      }
+    });
 
     window.addEventListener('resize', () => {
       if (window.innerWidth > 980 && navLinks) {

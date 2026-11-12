@@ -63,8 +63,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // If no errors, proceed with registration
     if (empty(array_filter($errors))) {
-        $hashed_password = password_hash($acc_password, PASSWORD_BCRYPT);
-        
         try {
         $conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_PORT);
             
@@ -74,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             
             // Prepared statement to prevent SQL injection
             $stmt = $conn->prepare("INSERT INTO hospital (Hospital_Name, Address, Registration_No, acc_password) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $hospital_name, $address, $registration_no, $hashed_password);
+            $stmt->bind_param("ssss", $hospital_name, $address, $registration_no, $acc_password);
             
             if ($stmt->execute()) {
                 $registration_success = true;
@@ -463,8 +461,8 @@ function registrationNoExists($registration_no) {
             
             <div class="form-group">
                 <label for="acc_password">Password *</label>
-                <input type="password" id="acc_password" name="acc_password" required 
-                       placeholder="Create a password (min 8 characters)" value="<?php echo htmlspecialchars($acc_password); ?>">
+                <input type="password" id="acc_password" name="acc_password" required
+                       placeholder="Create a password (min 8 characters)">
                 <i class="fas fa-eye password-toggle" id="togglePassword"></i>
                 <div class="password-strength">
                     <div class="strength-meter" id="strengthMeter"></div>

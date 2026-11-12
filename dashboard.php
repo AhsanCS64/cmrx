@@ -23,8 +23,18 @@ if (!$con) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
+mysqli_set_charset($con, "utf8mb4");
+$med_id = (int)($_SESSION['med_id'] ?? 0);
+$name = $dob = $blood_group = $Gender = $mobile_no = $email = '';
+if (empty($_SESSION['profile_update_csrf'])) {
+    $_SESSION['profile_update_csrf'] = bin2hex(random_bytes(32));
+}
+$profile_csrf_token = $_SESSION['profile_update_csrf'];
+$profile_message = $_SESSION['profile_update_message'] ?? '';
+$profile_message_type = $_SESSION['profile_update_message_type'] ?? '';
+unset($_SESSION['profile_update_message'], $_SESSION['profile_update_message_type']);
+
 // Fetch user details using MED_ID
-$med_id = $_SESSION['med_id'];
 $stmt = $con->prepare("SELECT Name, DOB, Blood_Group, Gender FROM patient_details WHERE MED_ID = ?");
 if ($stmt) {
     $stmt->bind_param("i", $med_id);
@@ -69,35 +79,130 @@ if ($stmt3) {
 
 // Handle profile update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
-    $updated_name = $_POST['name'];
-    $updated_dob = $_POST['dob'];
-    $updated_blood_group = $_POST['blood_group'];
-    $updated_mobile = $_POST['mobile_no'];
-    $updated_email = $_POST['email'];
-    $updated_gender = $_POST['Gender'];
+    $updated_name = isset($_POST['name']) && is_string($_POST['name']) ? trim($_POST['name']) : '';
+    $updated_dob = isset($_POST['dob']) && is_string($_POST['dob']) ? trim($_POST['dob']) : '';
+    $updated_blood_group = isset($_POST['blood_group']) && is_string($_POST['blood_group']) ? trim($_POST['blood_group']) : '';
+    $updated_mobile = isset($_POST['mobile_no']) && is_string($_POST['mobile_no']) ? trim($_POST['mobile_no']) : '';
+    $updated_email = isset($_POST['email']) && is_string($_POST['email']) ? trim($_POST['email']) : '';
+    $updated_gender = isset($_POST['Gender']) && is_string($_POST['Gender']) ? trim($_POST['Gender']) : '';
 
-    // Update patient_details table
-    $update_stmt1 = $con->prepare("UPDATE patient_details SET Name = ?, DOB = ?, Blood_Group = ?, Gender = ? WHERE MED_ID = ?");
-    if ($update_stmt1) {
-        $update_stmt1->bind_param("ssssi", $updated_name, $updated_dob, $updated_blood_group, $updated_gender, $med_id);
-        $update_stmt1->execute();
-        $update_stmt1->close();
-    }
+    $name = $updated_name;
+    $dob = $updated_dob;
+    $blood_group = $updated_blood_group;
+    $mobile_no = $updated_mobile;
+    $email = $updated_email;
+    $Gender = $updated_gender;
 
-    // Update patient_mobile table
-    $update_stmt2 = $con->prepare("UPDATE patient_mobile SET Mobile_No = ? WHERE MED_ID = ?");
-    if ($update_stmt2) {
-        $update_stmt2->bind_param("si", $updated_mobile, $med_id);
-        $update_stmt2->execute();
-        $update_stmt2->close();
-    }
+    $postedToken = isset($_POST['profile_csrf_token']) && is_string($_POST['profile_csrf_token'])
+        ? $_POST['profile_csrf_token']
+        : '';
+    if (!hash_equals($profile_csrf_token, $postedToken)) {
+        $profile_message = "Your session has expired. Reload the page and try again.";
+        $profile_message_type = 'error';
+    } elseif (
+        $updated_name === '' || $updated_dob === '' || $updated_blood_group === '' ||
+        $updated_mobile === '' || $updated_email === '' ||
+        !in_array($updated_gender, ['Male', 'Female', 'Other'], true)
+    ) {
+        $profile_message = "Please complete all profile fields.";
+        $profile_message_type = 'error';
+    } elseif (strlen($updated_email) > 100 || !filter_var($updated_email, FILTER_VALIDATE_EMAIL)) {
+        $profile_message = "Enter a valid email address (maximum 100 characters).";
+        $profile_message_type = 'error';
+    } else {
+        $transactionStarted = false;
+        try {
+            if (!$con->begin_transaction()) {
+                throw new RuntimeException("Unable to begin profile update transaction.");
+            }
+            $transactionStarted = true;
 
-    // Update patient_email table
-    $update_stmt3 = $con->prepare("UPDATE patient_email SET Email = ? WHERE MED_ID = ?");
-    if ($update_stmt3) {
-        $update_stmt3->bind_param("si", $updated_email, $med_id);
-        $update_stmt3->execute();
-        $update_stmt3->close();
+            $update_stmt1 = $con->prepare(
+                "UPDATE patient_details
+                 SET Name = ?, DOB = ?, Blood_Group = ?, Gender = ?
+                 WHERE MED_ID = ?"
+            );
+            if (!$update_stmt1) {
+                throw new RuntimeException($con->error);
+            }
+            $update_stmt1->bind_param("ssssi", $updated_name, $updated_dob, $updated_blood_group, $updated_gender, $med_id);
+            if (!$update_stmt1->execute()) {
+                throw new RuntimeException($update_stmt1->error);
+            }
+            $update_stmt1->close();
+
+            $update_stmt2 = $con->prepare("UPDATE patient_mobile SET Mobile_No = ? WHERE MED_ID = ?");
+            if (!$update_stmt2) {
+                throw new RuntimeException($con->error);
+            }
+            $update_stmt2->bind_param("si", $updated_mobile, $med_id);
+            if (!$update_stmt2->execute()) {
+                throw new RuntimeException($update_stmt2->error);
+            }
+            $update_stmt2->close();
+
+            $insert_mobile = $con->prepare(
+                "INSERT INTO patient_mobile (MED_ID, Mobile_No)
+                 SELECT ?, ? FROM DUAL
+                 WHERE NOT EXISTS (SELECT 1 FROM patient_mobile WHERE MED_ID = ?)"
+            );
+            if (!$insert_mobile) {
+                throw new RuntimeException($con->error);
+            }
+            $insert_mobile->bind_param("isi", $med_id, $updated_mobile, $med_id);
+            if (!$insert_mobile->execute()) {
+                throw new RuntimeException($insert_mobile->error);
+            }
+            $insert_mobile->close();
+
+            $update_stmt3 = $con->prepare("UPDATE patient_email SET Email = ? WHERE MED_ID = ?");
+            if (!$update_stmt3) {
+                throw new RuntimeException($con->error);
+            }
+            $update_stmt3->bind_param("si", $updated_email, $med_id);
+            if (!$update_stmt3->execute()) {
+                throw new RuntimeException($update_stmt3->error);
+            }
+            $update_stmt3->close();
+
+            $insert_email = $con->prepare(
+                "INSERT INTO patient_email (MED_ID, Email)
+                 SELECT ?, ? FROM DUAL
+                 WHERE NOT EXISTS (SELECT 1 FROM patient_email WHERE MED_ID = ?)"
+            );
+            if (!$insert_email) {
+                throw new RuntimeException($con->error);
+            }
+            $insert_email->bind_param("isi", $med_id, $updated_email, $med_id);
+            if (!$insert_email->execute()) {
+                throw new RuntimeException($insert_email->error);
+            }
+            $insert_email->close();
+
+            if (!$con->commit()) {
+                throw new RuntimeException("Unable to commit profile update.");
+            }
+            $transactionStarted = false;
+
+            $_SESSION['profile_update_message'] = "Profile updated successfully.";
+            $_SESSION['profile_update_message_type'] = 'success';
+            header("Location: ?action=update");
+            exit;
+        } catch (mysqli_sql_exception $e) {
+            if ($transactionStarted) {
+                $con->rollback();
+            }
+            error_log("Patient profile update failed: " . $e->getMessage());
+            $profile_message = "Unable to update your profile. Please try again.";
+            $profile_message_type = 'error';
+        } catch (RuntimeException $e) {
+            if ($transactionStarted) {
+                $con->rollback();
+            }
+            error_log("Patient profile update failed: " . $e->getMessage());
+            $profile_message = "Unable to update your profile. Please try again.";
+            $profile_message_type = 'error';
+        }
     }
 }
 
@@ -1348,7 +1453,13 @@ body {
                 <!-- Update Profile Form -->
                 <section class="card form-card">
                     <h2 class="form-title">Update Profile</h2>
+                    <?php if ($profile_message !== ''): ?>
+                        <div class="status-message <?php echo htmlspecialchars($profile_message_type, ENT_QUOTES, 'UTF-8'); ?>" role="status">
+                            <?php echo htmlspecialchars($profile_message, ENT_QUOTES, 'UTF-8'); ?>
+                        </div>
+                    <?php endif; ?>
                     <form method="POST" action="" class="modern-form">
+                        <input type="hidden" name="profile_csrf_token" value="<?php echo htmlspecialchars($profile_csrf_token, ENT_QUOTES, 'UTF-8'); ?>">
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="name" class="form-label">Name</label>
@@ -1376,7 +1487,7 @@ body {
                             </div>
                             <div class="form-group">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" id="email" name="email" class="form-input" value="<?php echo htmlspecialchars($email); ?>" required>
+                                <input type="email" id="email" name="email" class="form-input" maxlength="100" value="<?php echo htmlspecialchars($email); ?>" required>
                             </div>
                         </div>
                         <button type="submit" name="update_profile" class="form-submit">Update Profile</button>

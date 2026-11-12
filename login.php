@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $stmt->bind_result($stored_pass);
                 $stmt->fetch();
 
-                // ✅ Plain-text match (OR use password_verify if hashed)
+                // Compare the submitted password directly with the stored value.
                if ($acc_pass === $stored_pass) {
     session_regenerate_id(true); // ✅ Add this
     $_SESSION['loggedin'] = true;
