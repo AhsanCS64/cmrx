@@ -72,8 +72,11 @@ if (isset($_GET['med_id']) && is_numeric($_GET['med_id'])) {
            text-align: left;
         }
     </style>
+    <link rel="icon" type="image/webp" href="assets/cmrx-logo.webp">
+    <link rel="stylesheet" href="assets/css/presentation.css">
 </head>
 <body>
+<header><a href="Homepage.php"><span class="page-logo"><img src="assets/cmrx-logo.webp" width="420" height="280" alt="CMRx"></span></a></header>
     <h1>Patient Details for MED_ID: <?php echo htmlspecialchars($med_id); ?></h1>
     
     <!-- Patient Details Box -->

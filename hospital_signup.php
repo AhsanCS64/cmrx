@@ -409,17 +409,19 @@ function registrationNoExists($registration_no) {
             }
         }
     </style>
+<link rel="stylesheet" href="assets/css/presentation.css">
+<script src="assets/js/account.js" defer></script>
+    <link rel="icon" type="image/webp" href="assets/cmrx-logo.webp">
 </head>
-<body>
+<body class="account-page">
+<main class="account-shell account-registration">
+  <aside class="account-intro">
+    <a class="account-home" href="Homepage.php"><img src="assets/cmrx-logo.webp" width="420" height="280" alt="CMRx home"></a>
+    <div><p>Hospital portal</p><span class="account-product">Centralized Medical Records</span></div>
+  </aside>
     <div class="registration-container">
-        <div class="logo">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
-            <h1>CMRx</h1>
-        </div>
-        
-        <h2>Hospital Registration</h2>
+        <h1 class="account-heading">Create a hospital account</h1>
+        <p class="account-description">Enter your details to set up your CMRx account.</p>
         
         <?php if ($registration_success): ?>
             <div class="success-message">
@@ -461,9 +463,9 @@ function registrationNoExists($registration_no) {
             
             <div class="form-group">
                 <label for="acc_password">Password *</label>
-                <input type="password" id="acc_password" name="acc_password" required
+                <input type="password" autocomplete="new-password" id="acc_password" name="acc_password" required
                        placeholder="Create a password (min 8 characters)">
-                <i class="fas fa-eye password-toggle" id="togglePassword"></i>
+
                 <div class="password-strength">
                     <div class="strength-meter" id="strengthMeter"></div>
                 </div>
@@ -486,18 +488,9 @@ function registrationNoExists($registration_no) {
     </div>
 
     <script>
-        // Toggle password visibility
-        const togglePassword = document.getElementById('togglePassword');
         const passwordInput = document.getElementById('acc_password');
         const strengthMeter = document.getElementById('strengthMeter');
-        
-        togglePassword.addEventListener('click', function() {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
-        });
-        
+
         // Password strength indicator
         passwordInput.addEventListener('input', function() {
             const password = this.value;
@@ -537,5 +530,6 @@ function registrationNoExists($registration_no) {
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registering...';
         });
     </script>
+</main>
 </body>
 </html>

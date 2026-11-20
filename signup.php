@@ -195,11 +195,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     </style>
+<link rel="stylesheet" href="assets/css/presentation.css">
+<script src="assets/js/account.js" defer></script>
+    <link rel="icon" type="image/webp" href="assets/cmrx-logo.webp">
 </head>
-<body>
+<body class="account-page">
+<main class="account-shell account-registration">
+  <aside class="account-intro">
+    <a class="account-home" href="Homepage.php"><img src="assets/cmrx-logo.webp" width="420" height="280" alt="CMRx home"></a>
+    <div><p>Patient portal</p><span class="account-product">Centralized Medical Records</span></div>
+  </aside>
     <div class="signup-container">
-        <h2>Patient Signup</h2>
-        <form action="signup.php" method="POST">
+        <h1 class="account-heading">Create a patient account</h1>
+        <p class="account-description">Enter your details to set up your CMRx account.</p>
+        <form class="account-form-grid" action="signup.php" method="POST">
             <div class="form-group">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" required>
@@ -251,7 +260,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="acc_password" required>
+                <input type="password" autocomplete="new-password" id="password" name="acc_password" required>
             </div>
 
             <button type="submit" class="submit-btn">Sign Up</button>
@@ -259,5 +268,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
         
     </div>
+</main>
 </body>
 </html>

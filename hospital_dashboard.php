@@ -584,13 +584,15 @@ $doctorInitials = strtoupper(substr($hospitalName, 0, 1));
             .panel, .stat-card { box-shadow: none; break-inside: avoid; }
         }
     </style>
+<link rel="stylesheet" href="assets/css/presentation.css">
+    <link rel="icon" type="image/webp" href="assets/cmrx-logo.webp">
 </head>
-<body>
+<body class="workspace">
 <div class="shell">
     <aside class="sidebar">
         <div class="brand">
-            <div class="brand-icon"><i class="fa-solid fa-hospital"></i></div>
-            <div><strong>CMRx</strong><small>Hospital operations</small></div>
+            <span class="page-logo"><img src="assets/cmrx-logo.webp" width="420" height="280" alt="CMRx"></span>
+            <div><small>Hospital operations</small></div>
         </div>
         <div class="nav-label">Management</div>
         <nav class="nav" aria-label="Hospital dashboard">

@@ -168,28 +168,49 @@ $conn->close();
             text-decoration: underline;
         }
     </style>
+<link rel="stylesheet" href="assets/css/presentation.css">
+<script src="assets/js/account.js" defer></script>
+    <link rel="icon" type="image/webp" href="assets/cmrx-logo.webp">
 </head>
-<body>
+<body class="account-page">
+<main class="account-shell account-registration">
+  <aside class="account-intro">
+    <a class="account-home" href="Homepage.php"><img src="assets/cmrx-logo.webp" width="420" height="280" alt="CMRx home"></a>
+    <div><p>Doctor portal</p><span class="account-product">Centralized Medical Records</span></div>
+  </aside>
     <div class="signup-container">
-        <h2>Doctor Sign Up</h2>
-        <form action="signup_doc.php" method="post">
-            <label for="doc_id">Doctor ID:</label>
-            <input type="text" id="doc_id" name="doc_id" placeholder="Enter your ID" required>
+        <h1 class="account-heading">Create a doctor account</h1>
+        <p class="account-description">Enter your details to set up your CMRx account.</p>
+        <form class="account-form-grid" action="signup_doc.php" method="post">
+            <div class="form-group">
+                <label for="doc_id">Doctor ID:</label>
+                <input type="text" id="doc_id" name="doc_id" placeholder="Enter your ID" required>
+            </div>
 
-            <label for="hospital_serial">Hospital Serial:</label>
-            <input type="text" id="hospital_serial" name="hospital_serial" placeholder="Hospital Serial" required>
+            <div class="form-group">
+                <label for="hospital_serial">Hospital Serial:</label>
+                <input type="text" id="hospital_serial" name="hospital_serial" placeholder="Hospital Serial" required>
+            </div>
 
-            <label for="department_id">Department ID:</label>
-            <input type="text" id="department_id" name="department_id" placeholder="Department ID" required>
+            <div class="form-group">
+                <label for="department_id">Department ID:</label>
+                <input type="text" id="department_id" name="department_id" placeholder="Department ID" required>
+            </div>
 
-            <label for="doc_name">Doctor Name:</label>
-            <input type="text" id="doc_name" name="doc_name" placeholder="Your Name" required>
+            <div class="form-group">
+                <label for="doc_name">Doctor Name:</label>
+                <input type="text" id="doc_name" name="doc_name" placeholder="Your Name" required>
+            </div>
 
-            <label for="certification">Certification:</label>
-            <input type="text" id="certification" name="certification" placeholder="Certification (Optional)">
+            <div class="form-group">
+                <label for="certification">Certification:</label>
+                <input type="text" id="certification" name="certification" placeholder="Certification (Optional)">
+            </div>
 
-            <label for="doc_pass">Password:</label>
-            <input type="password" id="doc_pass" name="doc_pass" placeholder="Create Password" required>
+            <div class="form-group">
+                <label for="doc_pass">Password:</label>
+                <input type="password" autocomplete="new-password" id="doc_pass" name="doc_pass" placeholder="Create Password" required>
+            </div>
 
             <button type="submit" class="btn-submit">Sign Up</button>
         </form>
@@ -197,5 +218,6 @@ $conn->close();
             Already have an account? <a href="login_doc.php">Log In</a>
         </div>
     </div>
+</main>
 </body>
 </html>
